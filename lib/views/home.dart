@@ -9,6 +9,7 @@ import 'package:news_app/helper/news.dart';
 import 'package:news_app/views/category_news.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'article_view.dart';
+import 'package:transparent_image/transparent_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatefulWidget {
@@ -28,7 +29,6 @@ class _HomeState extends State<Home> {
 
   bool _loading = true;
   String countryname = "India";
-
 
   @override
   void initState() {
@@ -73,34 +73,18 @@ class _HomeState extends State<Home> {
         ),
         elevation: 0,
       ),
-
       body: _loading
           ? Container(
-              alignment: Alignment.center,
-              child: CircularProgressIndicator(),
-            ) : SingleChildScrollView(
-              child: Container(
+        alignment: Alignment.center,
+        child: CircularProgressIndicator(),
+      )
+          : Container(
+        child: Stack(
+          children: <Widget>[
+            Container(
+              child: SingleChildScrollView(
                 child: Column(
-                  children: <Widget>[
-                    Container(
-                      height: 60,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: categories.length,
-                        shrinkWrap: true,
-                        physics: ClampingScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          return Container(
-                            alignment: AlignmentDirectional.bottomCenter,
-                            child: Categorycard(
-                              cardName: categories[index].categorycardname,
-                              cardUrl: categories[index].categorycardurl,
-                              countryCode: widget.countryCode,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
+                  children: [
                     ExpansionTile(
                       title: Row(
                         children: [
@@ -136,24 +120,52 @@ class _HomeState extends State<Home> {
                             })
                       ],
                     ),
-                    Container(
-                      child: ListView.builder(
-                          itemCount: articles.length,
-                          shrinkWrap: true,
-                          physics: ClampingScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return Articleblog(
-                              imgurl: articles[index].urlToImage,
-                              title: articles[index].title,
-                              description: articles[index].description,
-                              weburl: articles[index].url,
-                            );
-                          }),
-                    ),
+                    ListView.builder(
+                        itemCount: articles.length,
+                        shrinkWrap: true,
+                        physics: ClampingScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return Articleblog(
+                            imgurl: articles[index].urlToImage,
+                            title: articles[index].title,
+                            description: articles[index].description,
+                            weburl: articles[index].url,
+                          );
+                        }),
                   ],
                 ),
               ),
             ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                padding:
+                EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                color: Colors.black12,
+                height: 90,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: categories.length,
+                  shrinkWrap: true,
+                  physics: ClampingScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return Container(
+                      alignment: AlignmentDirectional.bottomCenter,
+                      child: Categorycard(
+                        cardName: categories[index].categorycardname,
+                        cardUrl: categories[index].categorycardurl,
+                        countryCode: widget.countryCode,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
@@ -167,13 +179,13 @@ class Categorycard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => CategoryNews(
-                      category: cardName.toLowerCase(),
-                      countryCode: countryCode,
-                    )
-            )
-        );
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CategoryNews(
+                  category: cardName.toLowerCase(),
+                  countryCode: countryCode,
+                )));
       },
       child: Container(
         margin: EdgeInsets.only(left: 13),
@@ -183,15 +195,15 @@ class Categorycard extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               child: Image.asset(
                 cardUrl,
-                width: 120,
-                height: 60,
+                width: 130,
+                height: 65,
                 fit: BoxFit.cover,
               ),
             ),
             Container(
               alignment: Alignment.center,
-              width: 120,
-              height: 60,
+              width: 130,
+              height: 65,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 color: Colors.black.withOpacity(0.4),
@@ -225,8 +237,8 @@ class Articleblog extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (context) => ArticleView(
-                      blogurl: weburl,
-                    )));
+                  blogurl: weburl,
+                )));
       },
       child: Container(
         margin: EdgeInsets.all(10),
@@ -234,7 +246,9 @@ class Articleblog extends StatelessWidget {
           children: <Widget>[
             ClipRRect(
               borderRadius: BorderRadius.circular(7),
-              child: CachedNetworkImage(imageUrl: imgurl),
+              child: FadeInImage.memoryNetwork(
+                  placeholder: kTransparentImage,
+                  image: imgurl),
             ),
             SizedBox(
               height: 7,
@@ -280,10 +294,10 @@ class CountryListTile extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (context) => Home(
-                      countryName: countryName.trim(),
-                      countryistrue: false,
-                      countryCode: countryCode,
-                    )));
+                  countryName: countryName.trim(),
+                  countryistrue: false,
+                  countryCode: countryCode,
+                )));
       },
       child: Container(
         //  margin: EdgeInsets.only(right: 20,top: 5,bottom: 5),

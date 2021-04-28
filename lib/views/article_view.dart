@@ -21,18 +21,18 @@ class _ArticleViewState extends State<ArticleView> {
         title: Padding(
           padding: const EdgeInsets.only(left: 40.0,right: 40),
           child: Row(
-          //  mainAxisAlignment: MainAxisAlignment.center,
+            //  mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-            Text('Widely', style: GoogleFonts.bitter(
-            fontSize: 22,
-          ),
-          ),
-          Text('News',
-            style:GoogleFonts.bitter(
-              fontSize: 22,
-              color: Colors.blue,
-            ),
-          ),
+              Text('Widely', style: GoogleFonts.bitter(
+                fontSize: 22,
+              ),
+              ),
+              Text('News',
+                style:GoogleFonts.bitter(
+                  fontSize: 22,
+                  color: Colors.blue,
+                ),
+              ),
             ],
           ),
         ),
